@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}About OptiCrop — Smart Agricultural AI{% endblock %}
+{% block meta_description %}Learn about OptiCrop — the AI-powered Smart Agricultural Production Optimization Engine built with Python, Flask, and Machine Learning.{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header py-5">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8" data-aos="fade-up">
+        <div class="section-badge">About</div>
+        <h1 class="page-title">About OptiCrop</h1>
+        <p class="page-subtitle">
+          A production-ready AI system built to empower farmers, researchers, and policymakers
+          with data-driven agricultural intelligence.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="py-5">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="section-badge">Mission</div>
+        <h2 class="section-title text-start">Why We Built OptiCrop</h2>
+        <p class="text-secondary-oc">
+          Agriculture depends largely on the nature of soil and climatic conditions.
+          Unpredictable changes — non-seasonal rainfall, heat waves, humidity fluctuations —
+          cause tremendous losses for farmers who rely on intuition alone.
+        </p>
+        <p class="text-secondary-oc">
+          OptiCrop was built to bridge this gap. By training a Machine Learning model on
+          2,200 crop samples with 7 key soil and climate features, we help farmers understand
+          exactly which crop will thrive under their specific conditions.
+        </p>
+        <div class="mt-4 d-flex gap-3">
+          <a href="{{ url_for('predict_page') }}" class="btn btn-oc-primary" id="about-predict-btn">
+            <i class="fa-solid fa-seedling me-2"></i>Try It Now
+          </a>
+          <a href="{{ url_for('dashboard') }}" class="btn btn-oc-outline" id="about-dashboard-btn">
+            <i class="fa-solid fa-chart-line me-2"></i>View Analytics
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="about-stat-card">
+              <div class="asc-icon"><i class="fa-solid fa-database"></i></div>
+              <div class="asc-value">2,200</div>
+              <div class="asc-label">Training Samples</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="about-stat-card">
+              <div class="asc-icon"><i class="fa-solid fa-leaf"></i></div>
+              <div class="asc-value">22</div>
+              <div class="asc-label">Crop Types</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="about-stat-card">
+              <div class="asc-icon"><i class="fa-solid fa-chart-pie"></i></div>
+              <div class="asc-value">{{ "%.1f"|format(metrics.get('rf_accuracy', 0.99) * 100) }}%</div>
+              <div class="asc-label">Model Accuracy</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="about-stat-card">
+              <div class="asc-icon"><i class="fa-solid fa-sliders"></i></div>
+              <div class="asc-value">7</div>
+              <div class="asc-label">Input Features</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack -->
+<section class="py-5 section-features">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge">Technology</div>
+      <h2 class="section-title">Technology Stack</h2>
+      <p class="section-subtitle">Production-grade tools chosen for reliability and performance.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="fa-brands fa-python"></i></div>
+          <h5>Backend</h5>
+          <ul class="tech-list">
+            <li>Python 3.x</li>
+            <li>Flask 3.0</li>
+            <li>Scikit-learn (RandomForest)</li>
+            <li>Pandas &amp; NumPy</li>
+            <li>Joblib (model serialization)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="fa-brands fa-html5"></i></div>
+          <h5>Frontend</h5>
+          <ul class="tech-list">
+            <li>HTML5 &amp; CSS3</li>
+            <li>Bootstrap 5</li>
+            <li>JavaScript (ES6+)</li>
+            <li>Chart.js (interactive charts)</li>
+            <li>AOS (scroll animations)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-brain"></i></div>
+          <h5>Machine Learning</h5>
+          <ul class="tech-list">
+            <li>RandomForestClassifier</li>
+            <li>StandardScaler</li>
+            <li>LabelEncoder</li>
+            <li>Cross-validation (5-fold)</li>
+            <li>Feature importance analysis</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ML Pipeline -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge">Pipeline</div>
+      <h2 class="section-title">ML Pipeline Overview</h2>
+    </div>
+    <div class="row g-4">
+      {% set steps = [
+        ('1', 'fa-database', 'Data Loading', 'Reads 2,200 crop samples from dataset/data.csv with 7 soil and climate features.'),
+        ('2', 'fa-arrows-rotate', 'Preprocessing', 'StandardScaler normalizes features; LabelEncoder converts crop names to integers.'),
+        ('3', 'fa-code-branch', 'Train / Test Split', '80% training, 20% test with stratified sampling to preserve class balance.'),
+        ('4', 'fa-brain', 'Model Training', 'RandomForestClassifier with 200 trees, √feature max_features, and 5-fold cross-validation.'),
+        ('5', 'fa-chart-bar', 'Evaluation', 'Accuracy, classification report, confusion matrix, and per-crop accuracy computed.'),
+        ('6', 'fa-floppy-disk', 'Serialization', 'Model + encoder + scaler saved as a single .pkl artifact via Joblib for fast startup.')
+      ] %}
+      {% for num, icon, title, desc in steps %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 80 }}">
+        <div class="pipeline-step">
+          <div class="ps-number">{{ num }}</div>
+          <div class="ps-icon"><i class="fa-solid {{ icon }}"></i></div>
+          <h6 class="ps-title">{{ title }}</h6>
+          <p class="ps-desc">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

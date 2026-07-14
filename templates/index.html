@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}OptiCrop — Smart Agricultural Production Optimization Engine{% endblock %}
+{% block meta_description %}OptiCrop uses AI and Machine Learning to recommend the best crop based on your soil and climate conditions. Smart farming decisions made simple.{% endblock %}
+
+{% block content %}
+
+<!-- ░░░░ HERO SECTION ░░░░ -->
+<section class="hero-section" id="hero">
+  <!-- Animated background particles -->
+  <div class="hero-bg-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+
+  <div class="container position-relative">
+    <div class="row align-items-center min-vh-90 py-5">
+      <div class="col-lg-7" data-aos="fade-right" data-aos-duration="800">
+        <div class="hero-badge mb-4">
+          <i class="fa-solid fa-leaf me-2"></i>AI-Powered Agriculture
+        </div>
+        <h1 class="hero-title">
+          Smart Agricultural
+          <span class="gradient-text">Production</span>
+          Optimization Engine
+        </h1>
+        <p class="hero-subtitle">
+          OptiCrop uses advanced Machine Learning to analyze your soil composition and
+          climate conditions — recommending the most suitable crop for <strong>maximum yield</strong>
+          and <strong>farming efficiency</strong>.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="{{ url_for('predict_page') }}" class="btn btn-oc-primary btn-lg" id="hero-predict-btn">
+            <i class="fa-solid fa-seedling me-2"></i>Recommend My Crop
+          </a>
+          <a href="{{ url_for('dashboard') }}" class="btn btn-oc-outline btn-lg" id="hero-dashboard-btn">
+            <i class="fa-solid fa-chart-line me-2"></i>Explore Dashboard
+          </a>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="d-flex flex-wrap gap-4 mt-5">
+          <div class="hero-stat">
+            <div class="hero-stat-number" data-count="{{ metrics.get('total_samples', 2200) }}">0</div>
+            <div class="hero-stat-label">Training Samples</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number" data-count="{{ metrics.get('n_classes', 22) }}">0</div>
+            <div class="hero-stat-label">Crop Types</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number"
+                 data-count="{{ (metrics.get('rf_accuracy', 0.99) * 100) | round(1) }}"
+                 data-suffix="%">0%</div>
+            <div class="hero-stat-label">Model Accuracy</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number" data-count="7">0</div>
+            <div class="hero-stat-label">Input Features</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5 d-none d-lg-flex justify-content-center" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+        <div class="hero-visual">
+          <div class="hero-card-float">
+            <div class="hcf-header">
+              <i class="fa-solid fa-brain text-success me-2"></i>AI Prediction
+            </div>
+            <div class="hcf-crop">🌾 Rice</div>
+            <div class="hcf-confidence">
+              <span>Confidence</span>
+              <div class="hcf-bar"><div class="hcf-fill" style="width:98%"></div></div>
+              <span class="text-success fw-bold">98%</span>
+            </div>
+            <div class="hcf-params">
+              <span class="hcf-param">N: 90</span>
+              <span class="hcf-param">P: 42</span>
+              <span class="hcf-param">K: 43</span>
+              <span class="hcf-param">Temp: 23°C</span>
+            </div>
+          </div>
+          <div class="hero-icons-ring">
+            <div class="ring-icon" style="--angle:0deg">🌾</div>
+            <div class="ring-icon" style="--angle:45deg">🌽</div>
+            <div class="ring-icon" style="--angle:90deg">☕</div>
+            <div class="ring-icon" style="--angle:135deg">🍌</div>
+            <div class="ring-icon" style="--angle:180deg">🥭</div>
+            <div class="ring-icon" style="--angle:225deg">🍊</div>
+            <div class="ring-icon" style="--angle:270deg">🍇</div>
+            <div class="ring-icon" style="--angle:315deg">🥥</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░░ 3 SCENARIOS SECTION ░░░░ -->
+<section class="section-scenarios py-6" id="scenarios">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge">Use Cases</div>
+      <h2 class="section-title">How OptiCrop Helps You</h2>
+      <p class="section-subtitle">
+        Three powerful scenarios — from field-level decisions to national policy planning.
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Scenario 1 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="scenario-card h-100" id="scenario-1">
+          <div class="scenario-number">01</div>
+          <div class="scenario-icon">
+            <i class="fa-solid fa-tractor"></i>
+          </div>
+          <h3 class="scenario-title">Smart Crop Recommendation for Farmers</h3>
+          <p class="scenario-desc">
+            A farmer enters soil and environmental details such as Nitrogen (N), Phosphorous (P),
+            Potassium (K), temperature, humidity, pH level, and rainfall. The system analyzes
+            the data and recommends the most suitable crop for <strong>maximum yield</strong>
+            and <strong>better farming efficiency</strong>.
+          </p>
+          <div class="scenario-tags">
+            <span class="s-tag">Soil Analysis</span>
+            <span class="s-tag">Crop Recommendation</span>
+            <span class="s-tag">Yield Optimization</span>
+          </div>
+          <a href="{{ url_for('predict_page') }}" class="btn btn-oc-primary mt-auto" id="scenario-1-btn">
+            <i class="fa-solid fa-seedling me-2"></i>Get Recommendation
+          </a>
+        </div>
+      </div>
+
+      <!-- Scenario 2 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="scenario-card scenario-card-accent h-100" id="scenario-2">
+          <div class="scenario-number">02</div>
+          <div class="scenario-icon">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+          </div>
+          <h3 class="scenario-title">Crop Suitability & Environmental Assessment</h3>
+          <p class="scenario-desc">
+            A user wants to understand whether the current soil and climate conditions are
+            suitable for a particular crop. The application evaluates the input parameters
+            and provides insights about <strong>crop compatibility</strong>,
+            <strong>environmental suitability</strong>, and productivity potential.
+          </p>
+          <div class="scenario-tags">
+            <span class="s-tag">Suitability Analysis</span>
+            <span class="s-tag">Climate Matching</span>
+            <span class="s-tag">Compatibility</span>
+          </div>
+          <a href="{{ url_for('predict_page') }}" class="btn btn-oc-primary mt-auto" id="scenario-2-btn">
+            <i class="fa-solid fa-flask me-2"></i>Assess Suitability
+          </a>
+        </div>
+      </div>
+
+      <!-- Scenario 3 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="scenario-card h-100" id="scenario-3">
+          <div class="scenario-number">03</div>
+          <div class="scenario-icon">
+            <i class="fa-solid fa-landmark"></i>
+          </div>
+          <h3 class="scenario-title">Agricultural Research & Policy Planning</h3>
+          <p class="scenario-desc">
+            An agricultural researcher or policymaker uses the system to analyze
+            crop-environment relationships and identify patterns in agricultural production.
+            The platform helps in making <strong>data-driven decisions</strong> for
+            <strong>sustainable farming</strong> strategies and resource optimization.
+          </p>
+          <div class="scenario-tags">
+            <span class="s-tag">Pattern Analysis</span>
+            <span class="s-tag">Data-Driven Policy</span>
+            <span class="s-tag">Sustainability</span>
+          </div>
+          <a href="{{ url_for('dashboard') }}" class="btn btn-oc-primary mt-auto" id="scenario-3-btn">
+            <i class="fa-solid fa-chart-line me-2"></i>Explore Analytics
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ░░░░ FEATURES SECTION ░░░░ -->
+<section class="section-features py-6" id="features">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge">Capabilities</div>
+      <h2 class="section-title">What Makes OptiCrop Powerful</h2>
+      <p class="section-subtitle">Built on rigorous ML principles with a focus on practical agricultural impact.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card text-center">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-brain"></i></div>
+          <h5>Random Forest AI</h5>
+          <p>Ensemble of 200 decision trees for robust, high-accuracy predictions across all 22 crop types.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="80">
+        <div class="feature-card text-center">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-bolt"></i></div>
+          <h5>Instant Predictions</h5>
+          <p>Model loaded once at startup. Each prediction returns in milliseconds — no retraining per request.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="160">
+        <div class="feature-card text-center">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-chart-bar"></i></div>
+          <h5>Rich Analytics</h5>
+          <p>Interactive charts for crop distribution, NPK profiles, climate analysis, and seasonal patterns.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="240">
+        <div class="feature-card text-center">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-file-csv"></i></div>
+          <h5>Batch Prediction</h5>
+          <p>Upload a CSV with multiple soil profiles and receive instant recommendations for all rows.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░░ HOW IT WORKS ░░░░ -->
+<section class="section-how py-6" id="how-it-works">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge">Process</div>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">A simple 3-step journey from soil data to actionable crop recommendation.</p>
+    </div>
+
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="how-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h5>Enter Soil & Climate Data</h5>
+            <p>Input 7 parameters: Nitrogen, Phosphorous, Potassium, Temperature, Humidity, pH, and Rainfall.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="how-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h5>AI Analyzes Your Data</h5>
+            <p>Our Random Forest model processes the inputs through 200 decision trees trained on 2,200 samples.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="how-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h5>Get Your Recommendation</h5>
+            <p>Receive the top crop recommendation with confidence score, probability breakdown, and full crop guide.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-5" data-aos="fade-up">
+      <a href="{{ url_for('predict_page') }}" class="btn btn-oc-primary btn-lg" id="start-predicting-btn">
+        <i class="fa-solid fa-play me-2"></i>Start Predicting Now
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░░ CTA BANNER ░░░░ -->
+<section class="section-cta py-5" id="cta">
+  <div class="container">
+    <div class="cta-card" data-aos="zoom-in">
+      <div class="row align-items-center gy-3">
+        <div class="col-lg-8">
+          <h3 class="cta-title">Ready to optimize your farm's production?</h3>
+          <p class="cta-subtitle mb-0">
+            Enter your soil and climate conditions and let OptiCrop's AI guide your next harvest.
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="{{ url_for('predict_page') }}" class="btn btn-oc-white btn-lg me-2" id="cta-predict-btn">
+            <i class="fa-solid fa-seedling me-2"></i>Predict Crop
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Animated stat counters
+  document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('.hero-stat-number[data-count]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(el => observer.observe(el));
+
+    function animateCounter(el) {
+      const target  = parseFloat(el.dataset.count);
+      const suffix  = el.dataset.suffix || '';
+      const isFloat = !Number.isInteger(target);
+      const duration = 1500;
+      const start    = performance.now();
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const ease     = 1 - Math.pow(1 - progress, 3);
+        const value    = target * ease;
+        el.textContent = (isFloat ? value.toFixed(1) : Math.round(value)) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+  });
+</script>
+{% endblock %}

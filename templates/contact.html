@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Contact — OptiCrop{% endblock %}
+{% block meta_description %}Get in touch with the OptiCrop team. We welcome feedback, collaboration, and agricultural AI inquiries.{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header py-5">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-7" data-aos="fade-up">
+        <div class="section-badge">Contact</div>
+        <h1 class="page-title">Get In Touch</h1>
+        <p class="page-subtitle">
+          Questions about OptiCrop, agricultural ML research, or collaboration opportunities?
+          We'd love to hear from you.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-5 pb-6">
+  <div class="container">
+    <div class="row justify-content-center g-5">
+
+      <!-- Contact Info -->
+      <div class="col-lg-4" data-aos="fade-right">
+        <h4 class="mb-4 text-success">Contact Information</h4>
+        <div class="contact-info-list">
+
+          <div class="contact-info-item">
+            <div class="cii-icon"><i class="fa-solid fa-seedling"></i></div>
+            <div>
+              <div class="cii-label">Platform</div>
+              <div class="cii-value">OptiCrop — Smart Agri AI</div>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="cii-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <div class="cii-label">Email</div>
+              <div class="cii-value">opticrop@agri-ai.example.com</div>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="cii-icon"><i class="fa-brands fa-github"></i></div>
+            <div>
+              <div class="cii-label">GitHub</div>
+              <div class="cii-value">github.com/opticrop</div>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="cii-icon"><i class="fa-solid fa-book"></i></div>
+            <div>
+              <div class="cii-label">Documentation</div>
+              <div class="cii-value">opticrop.readthedocs.io</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick links -->
+        <div class="mt-4">
+          <h6 class="text-secondary-oc mb-3">Quick Actions</h6>
+          <div class="d-flex flex-column gap-2">
+            <a href="{{ url_for('predict_page') }}" class="btn btn-oc-primary" id="contact-predict-btn">
+              <i class="fa-solid fa-seedling me-2"></i>Predict a Crop
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-oc-outline" id="contact-dashboard-btn">
+              <i class="fa-solid fa-chart-line me-2"></i>View Analytics
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="col-lg-7" data-aos="fade-left">
+        <div class="contact-form-card">
+          <h4 class="mb-4">Send a Message</h4>
+          <form id="contact-form" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="param-label" for="contact-name">Full Name</label>
+                <input type="text" class="oc-input" id="contact-name" placeholder="Your Name" required />
+              </div>
+              <div class="col-md-6">
+                <label class="param-label" for="contact-email">Email Address</label>
+                <input type="email" class="oc-input" id="contact-email" placeholder="you@example.com" required />
+              </div>
+              <div class="col-12">
+                <label class="param-label" for="contact-subject">Subject</label>
+                <select class="oc-input" id="contact-subject">
+                  <option value="">Select a topic…</option>
+                  <option>Crop Recommendation Inquiry</option>
+                  <option>Research Collaboration</option>
+                  <option>Policy & Planning Partnership</option>
+                  <option>Technical Issue / Bug Report</option>
+                  <option>Feature Request</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="param-label" for="contact-message">Message</label>
+                <textarea class="oc-input" id="contact-message" rows="5"
+                  placeholder="Describe your inquiry or feedback in detail…" required></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-oc-primary w-100" id="contact-submit-btn">
+                  <i class="fa-solid fa-paper-plane me-2"></i>Send Message
+                </button>
+              </div>
+            </div>
+          </form>
+          <div id="contact-success" class="alert alert-success mt-3" style="display:none;">
+            <i class="fa-solid fa-circle-check me-2"></i>
+            Thank you for your message! We'll get back to you shortly.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('contact-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Sending…';
+  setTimeout(() => {
+    document.getElementById('contact-success').style.display = 'block';
+    this.reset();
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>Send Message';
+  }, 1200);
+});
+</script>
+{% endblock %}

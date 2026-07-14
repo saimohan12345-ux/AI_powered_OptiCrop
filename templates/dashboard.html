@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard — OptiCrop{% endblock %}
+{% block meta_description %}Explore interactive agricultural analytics — crop distribution, NPK profiles, climate patterns, and season analysis powered by Chart.js.{% endblock %}
+
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header py-4">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8" data-aos="fade-up">
+        <div class="section-badge">Scenario 3</div>
+        <h1 class="page-title">Agricultural Analytics Dashboard</h1>
+        <p class="page-subtitle">
+          Explore crop-environment relationships, NPK profiles, climate distributions,
+          and seasonal patterns across 2,200 agricultural data points.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Summary Stats -->
+<section class="py-4">
+  <div class="container">
+    <div class="row g-3" id="summary-stats-row">
+      {% set stat_cards = [
+        ('total_samples', 'fa-database',       '#22c55e', 'Total Samples',   ''),
+        ('n_crops',       'fa-leaf',            '#f97316', 'Crop Types',      ''),
+        ('avg_N',         'fa-vial',            '#84cc16', 'Avg Nitrogen',    ' kg/ha'),
+        ('avg_P',         'fa-flask',           '#f97316', 'Avg Phosphorous', ' kg/ha'),
+        ('avg_K',         'fa-atom',            '#3b82f6', 'Avg Potassium',   ' kg/ha'),
+        ('avg_temp',      'fa-thermometer-half','#ef4444', 'Avg Temperature', '°C'),
+        ('avg_humidity',  'fa-droplet',         '#06b6d4', 'Avg Humidity',    '%'),
+        ('avg_rainfall',  'fa-cloud-rain',      '#0ea5e9', 'Avg Rainfall',    ' mm'),
+      ] %}
+      {% for key, icon, color, label, unit in stat_cards %}
+      <div class="col-6 col-md-3 col-xl-3" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+        <div class="dash-stat-card">
+          <div class="dsc-icon" style="color:{{ color }}">
+            <i class="fa-solid {{ icon }}"></i>
+          </div>
+          <div class="dsc-value" id="stat-{{ key }}">—</div>
+          <div class="dsc-label">{{ label }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Charts Row 1: Distribution + NPK -->
+<section class="py-3">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Crop Distribution -->
+      <div class="col-lg-5" data-aos="fade-right">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-chart-pie text-success me-2"></i>
+            Crop Distribution
+          </div>
+          <div class="chart-wrapper-md">
+            <canvas id="crop-distribution-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- NPK by Crop -->
+      <div class="col-lg-7" data-aos="fade-left">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-chart-bar text-success me-2"></i>
+            Average NPK Profile by Crop
+          </div>
+          <div class="chart-wrapper-md">
+            <canvas id="npk-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Charts Row 2: Climate -->
+<section class="py-3">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Temperature by Crop -->
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-thermometer-half text-danger me-2"></i>
+            Average Temperature by Crop
+          </div>
+          <div class="chart-wrapper-md">
+            <canvas id="temperature-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rainfall by Crop -->
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-cloud-rain text-info me-2"></i>
+            Average Rainfall by Crop (mm)
+          </div>
+          <div class="chart-wrapper-md">
+            <canvas id="rainfall-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Charts Row 3: Humidity + pH histograms -->
+<section class="py-3">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Humidity Distribution -->
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-droplet text-info me-2"></i>
+            Humidity Distribution
+          </div>
+          <div class="chart-wrapper-sm">
+            <canvas id="humidity-hist-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- pH Distribution -->
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-scale-balanced text-purple me-2"></i>
+            pH Level Distribution
+          </div>
+          <div class="chart-wrapper-sm">
+            <canvas id="ph-hist-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Seasonal Analysis + Patterns -->
+<section class="py-3 pb-5">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Season Crops Table -->
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-sun text-warning me-2"></i>
+            Crop Suitability by Season
+          </div>
+          <div id="season-table-wrap">
+            <div class="season-block">
+              <div class="season-title season-summer"><i class="fa-solid fa-sun me-2"></i>Summer</div>
+              <div id="season-summer" class="season-tags"></div>
+            </div>
+            <div class="season-block">
+              <div class="season-title season-winter"><i class="fa-solid fa-snowflake me-2"></i>Winter</div>
+              <div id="season-winter" class="season-tags"></div>
+            </div>
+            <div class="season-block">
+              <div class="season-title season-monsoon"><i class="fa-solid fa-cloud-rain me-2"></i>Monsoon</div>
+              <div id="season-monsoon" class="season-tags"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interesting Patterns -->
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="dash-chart-card h-100">
+          <div class="dcc-header">
+            <i class="fa-solid fa-magnifying-glass text-warning me-2"></i>
+            Interesting Agricultural Patterns
+          </div>
+          <div id="patterns-table">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ─── Chart defaults ───────────────────────────────────────────────────────────
+Chart.defaults.color = '#86efac';
+Chart.defaults.font.family = "'Inter', sans-serif";
+
+// ─── Load dashboard data ──────────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const res  = await fetch('/api/dashboard-data');
+    const data = await res.json();
+    if (data.error) { console.error(data.error); return; }
+
+    fillSummary(data.summary);
+    renderCropDistribution(data.crop_distribution);
+    renderNPK(data.npk_stats);
+    renderClimate(data.climate_data);
+    renderHistogram('humidity-hist-chart', data.hist_data.humidity, '#06b6d4', 'Humidity (%)');
+    renderHistogram('ph-hist-chart',       data.hist_data.ph,       '#a855f7', 'pH Level');
+    fillSeasons(data.season_crops);
+    fillPatterns(data.patterns);
+
+  } catch (err) {
+    console.error('Dashboard load error:', err);
+  }
+}
+
+// ─── Summary stats ─────────────────────────────────────────────────────────────
+function fillSummary(s) {
+  const map = {
+    'stat-total_samples': s.total_samples,
+    'stat-n_crops':       s.n_crops,
+    'stat-avg_N':         s.avg_N,
+    'stat-avg_P':         s.avg_P,
+    'stat-avg_K':         s.avg_K,
+    'stat-avg_temp':      s.avg_temp,
+    'stat-avg_humidity':  s.avg_humidity,
+    'stat-avg_rainfall':  s.avg_rainfall,
+  };
+  Object.entries(map).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = typeof val === 'number' ? val.toLocaleString() : val;
+  });
+}
+
+// ─── Crop Distribution Pie ────────────────────────────────────────────────────
+function renderCropDistribution(d) {
+  new Chart(document.getElementById('crop-distribution-chart'), {
+    type: 'doughnut',
+    data: {
+      labels:   d.labels,
+      datasets: [{ data: d.data, backgroundColor: d.colors, borderColor: '#0a1f0f', borderWidth: 2 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { color: '#86efac', boxWidth: 12, font: { size: 10 } }
+        },
+        tooltip: {
+          callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} samples` }
+        }
+      }
+    }
+  });
+}
+
+// ─── NPK Bar Chart ───────────────────────────────────────────────────────────
+function renderNPK(d) {
+  new Chart(document.getElementById('npk-chart'), {
+    type: 'bar',
+    data: {
+      labels: d.crops,
+      datasets: [
+        { label: 'Nitrogen (N)',     data: d.N, backgroundColor: 'rgba(34,197,94,0.7)',  borderRadius: 3 },
+        { label: 'Phosphorous (P)', data: d.P, backgroundColor: 'rgba(249,115,22,0.7)', borderRadius: 3 },
+        { label: 'Potassium (K)',   data: d.K, backgroundColor: 'rgba(59,130,246,0.7)',  borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#86efac' } }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#86efac', maxRotation: 60, font:{size:9} } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#86efac' } }
+      }
+    }
+  });
+}
+
+// ─── Climate charts ───────────────────────────────────────────────────────────
+function renderClimate(d) {
+  // Temperature
+  new Chart(document.getElementById('temperature-chart'), {
+    type: 'bar',
+    data: {
+      labels: d.crops,
+      datasets: [{ label:'Avg Temp (°C)', data: d.temperature, backgroundColor:'rgba(239,68,68,0.7)', borderRadius:3 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels:{color:'#86efac'} } },
+      scales: {
+        x: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#86efac', maxRotation:60, font:{size:9}} },
+        y: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#86efac'} }
+      }
+    }
+  });
+  // Rainfall
+  new Chart(document.getElementById('rainfall-chart'), {
+    type: 'bar',
+    data: {
+      labels: d.crops,
+      datasets: [{ label:'Avg Rainfall (mm)', data: d.rainfall, backgroundColor:'rgba(14,165,233,0.7)', borderRadius:3 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels:{color:'#86efac'} } },
+      scales: {
+        x: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#86efac', maxRotation:60, font:{size:9}} },
+        y: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#86efac'} }
+      }
+    }
+  });
+}
+
+// ─── Histogram ────────────────────────────────────────────────────────────────
+function renderHistogram(canvasId, d, color, label) {
+  new Chart(document.getElementById(canvasId), {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{ label, data: d.counts, backgroundColor: color + '99', borderColor: color, borderWidth:1, borderRadius:3 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels:{color:'#86efac'} } },
+      scales: {
+        x: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#86efac', maxRotation:45, font:{size:9}} },
+        y: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#86efac'} }
+      }
+    }
+  });
+}
+
+// ─── Season crops ─────────────────────────────────────────────────────────────
+function fillSeasons(s) {
+  ['summer','winter','monsoon'].forEach(season => {
+    const el = document.getElementById('season-' + season);
+    if (!el) return;
+    const crops = s[season] || [];
+    el.innerHTML = crops.length
+      ? crops.map(c => `<span class="s-tag">${c}</span>`).join('')
+      : '<span class="text-muted small">No data</span>';
+  });
+}
+
+// ─── Patterns ────────────────────────────────────────────────────────────────
+function fillPatterns(p) {
+  const rows = [
+    ['fa-arrow-up text-success', 'High Nitrogen (>120)',    p.high_N],
+    ['fa-arrow-up text-warning', 'High Phosphorous (>100)', p.high_P],
+    ['fa-arrow-up text-info',    'High Potassium (>200)',   p.high_K],
+    ['fa-cloud text-info',       'Very High Rainfall',      p.high_rain],
+    ['fa-temperature-low',       'Very Low Temperature',    p.low_temp],
+    ['fa-temperature-high text-danger','Very High Temp',   p.high_temp],
+    ['fa-droplet-slash',         'Very Low Humidity',       p.low_humidity],
+    ['fa-scale-balanced text-purple','Low pH (<4)',         p.low_ph],
+    ['fa-scale-balanced text-warning','High pH (>9)',       p.high_ph],
+  ];
+  document.getElementById('patterns-table').innerHTML = rows.map(([icon, label, crops]) => `
+    <div class="pattern-row">
+      <div class="pattern-label"><i class="fa-solid ${icon} me-2"></i>${label}</div>
+      <div class="pattern-crops">
+        ${(crops||[]).length
+          ? crops.map(c => `<span class="s-tag s-tag-sm">${c}</span>`).join('')
+          : '<span class="text-muted small">None</span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+{% endblock %}
